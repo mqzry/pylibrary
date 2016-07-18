@@ -1,5 +1,4 @@
 from pathlib import Path
-import pdf
 
 resources_path = Path(
     ".\Resources")
