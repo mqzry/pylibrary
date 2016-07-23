@@ -1,0 +1,11 @@
+Change key 'arxiv' to 'arxiv_id'
+Remove fullstop from attachment names in cloudant
+write interface for retrievers
+write function to retrieve metadata from google books
+write function to retrieve metadata from arxiv
+write function to retrieve metadata from libgen
+write functions to retrieve metadata from HAL
+
+fill in data for the one entry from HAL
+write download function
+remove hyphenation from isbn

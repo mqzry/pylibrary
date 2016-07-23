@@ -90,3 +90,6 @@ ENV/
 
 # auth properties for DB
 auth.py
+
+# Sublime
+*.sublime-workspace
