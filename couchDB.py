@@ -8,9 +8,10 @@ from base64 import b64encode
 
 class CouchDB:
 
-    def __init__(self, url, auth):
+    def __init__(self, url, user, password):
         self.base_url = url
-        self.auth = auth
+        self.user = user
+        self.password = password
 
     def set_current_db(self, db):
         self.db = db
@@ -18,22 +19,22 @@ class CouchDB:
 
     def create(self, doc):
         result = requests.post(self.db_url, json=doc,
-                               auth=(self.auth.user, self.auth.password))
+                               auth=(self.user, self.password))
         return result.json()
 
     def update(self, doc):
         result = requests.post(self.db_url + doc['_id'], json=doc,
-                               auth=(auth.user, auth.password))
+                               auth=(self.user, self.password))
         return result.json()
 
     def get(self, id):
         result = requests.get(self.db_url + id,
-                              auth=(auth.user, auth.password))
+                              auth=(self.user, self.password))
         return result.json()
 
     def query(self, method, params=None):
         response = requests.get(self.db_url + method, params=params,
-                                auth=(auth.user, auth.password))
+                                auth=(self.user, self.password))
         return response.json()
 
     def put_bulk(self, docs):
@@ -60,24 +61,26 @@ class CouchDB:
                 }
         return doc
 
-    def replicate(self, source, target):
-        doc = {'source': self.base_url + source, 'target': self.base_url + target, "create_target": True}
+    def replicate(self, source, target, params={}):
+        doc = params
+        doc['source'] = self.base_url + source
+        doc['target'] = self.base_url + target
         self.set_current_db('_replicator')
         return self.create(doc)
 
     def create_db(self, name):
-        return requests.put(self.base_url + name)
+        return requests.put(self.base_url + name, auth=(self.user, self.password))
 
     def delete_db(self, name):
-        return requests.delete(self.base_url + name)
+        return requests.delete(self.base_url + name, auth=(self.user, self.password))
 
     def get_view(self, design_doc, view_name):
-        response = requests.get(self.db_url + "_design/{0}/_view/{1}".format(design_doc, view_name))
+        response = requests.get(self.db_url + "_design/{0}/_view/{1}".format(design_doc, view_name),
+                                auth=(self.user, self.password))
         return response
 
 
 class Cloudant(CouchDB):
 
     def __init__(self, user, password):
-        self.base_url = 'https://{}.cloudant.com/'.format(user)
-        self.auth = {'user': user, 'password': password}
+        super().__init__('https://{}.cloudant.com/'.format(user), user, password)

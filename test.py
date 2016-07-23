@@ -1,10 +1,10 @@
-import db
-import enrich_db
+import couchDB
+import auth
 
-## Test CouchDB interface
-db.replicate('library', 'testdb')
-#enrich_db.libgen('testdb')
-#print(db.get_bulk()['rows'][0:10])
+db = couchDB.Cloudant(auth.user, auth.password)
+
+db.create_db('test')
+print(db.replicate('library', 'test'))
 
 
 ## Test enrichment step
