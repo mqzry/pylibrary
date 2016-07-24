@@ -4,6 +4,7 @@ import requests
 
 libgen_api_url = "http://gen.lib.rus.ec/json.php"
 
+
 def get(ids):
     payload = {'ids': ','.join(ids),
                'fields': '*'}
